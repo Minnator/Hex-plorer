@@ -31,7 +31,7 @@ partial class HexPlorerWindow
       tableLayoutPanel1 = new TableLayoutPanel();
       splitContainer1 = new SplitContainer();
       FileTreeView = new TreeView();
-      splitContainer2 = new SplitContainer();
+      ViewSplitContainer = new SplitContainer();
       PreviewPanel = new Panel();
       tableLayoutPanel2 = new TableLayoutPanel();
       button1 = new Button();
@@ -49,9 +49,9 @@ partial class HexPlorerWindow
       splitContainer1.Panel1.SuspendLayout();
       splitContainer1.Panel2.SuspendLayout();
       splitContainer1.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)splitContainer2).BeginInit();
-      splitContainer2.Panel2.SuspendLayout();
-      splitContainer2.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)ViewSplitContainer).BeginInit();
+      ViewSplitContainer.Panel2.SuspendLayout();
+      ViewSplitContainer.SuspendLayout();
       tableLayoutPanel2.SuspendLayout();
       tableLayoutPanel3.SuspendLayout();
       tableLayoutPanel4.SuspendLayout();
@@ -87,7 +87,7 @@ partial class HexPlorerWindow
       // 
       // splitContainer1.Panel2
       // 
-      splitContainer1.Panel2.Controls.Add(splitContainer2);
+      splitContainer1.Panel2.Controls.Add(ViewSplitContainer);
       splitContainer1.Size = new Size(1150, 661);
       splitContainer1.SplitterDistance = 250;
       splitContainer1.TabIndex = 0;
@@ -105,22 +105,23 @@ partial class HexPlorerWindow
       FileTreeView.TabIndex = 0;
       FileTreeView.AfterCollapse += FileTreeView_AfterCollapse;
       FileTreeView.AfterExpand += FileTreeView_AfterExpand;
+      FileTreeView.Click += FileTreeView_Click;
       FileTreeView.DoubleClick += OpenFolderFileTreeView;
       FileTreeView.MouseDown += Form1_MouseDown;
       // 
-      // splitContainer2
+      // ViewSplitContainer
       // 
-      splitContainer2.Dock = DockStyle.Fill;
-      splitContainer2.Location = new Point(0, 0);
-      splitContainer2.Margin = new Padding(0);
-      splitContainer2.Name = "splitContainer2";
+      ViewSplitContainer.Dock = DockStyle.Fill;
+      ViewSplitContainer.Location = new Point(0, 0);
+      ViewSplitContainer.Margin = new Padding(0);
+      ViewSplitContainer.Name = "ViewSplitContainer";
       // 
-      // splitContainer2.Panel2
+      // ViewSplitContainer.Panel2
       // 
-      splitContainer2.Panel2.Controls.Add(PreviewPanel);
-      splitContainer2.Size = new Size(896, 661);
-      splitContainer2.SplitterDistance = 700;
-      splitContainer2.TabIndex = 0;
+      ViewSplitContainer.Panel2.Controls.Add(PreviewPanel);
+      ViewSplitContainer.Size = new Size(896, 661);
+      ViewSplitContainer.SplitterDistance = 700;
+      ViewSplitContainer.TabIndex = 0;
       // 
       // PreviewPanel
       // 
@@ -289,9 +290,9 @@ partial class HexPlorerWindow
       splitContainer1.Panel2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
       splitContainer1.ResumeLayout(false);
-      splitContainer2.Panel2.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
-      splitContainer2.ResumeLayout(false);
+      ViewSplitContainer.Panel2.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)ViewSplitContainer).EndInit();
+      ViewSplitContainer.ResumeLayout(false);
       tableLayoutPanel2.ResumeLayout(false);
       tableLayoutPanel3.ResumeLayout(false);
       tableLayoutPanel4.ResumeLayout(false);
@@ -307,9 +308,8 @@ partial class HexPlorerWindow
    private TableLayoutPanel tableLayoutPanel1;
    private SplitContainer splitContainer1;
    private ToolStripContainer toolStripContainer1;
-   private TreeView FileTreeView;
-   private SplitContainer splitContainer2;
-   private ListView listView1;
+   public TreeView FileTreeView;
+   public SplitContainer ViewSplitContainer;
    private Panel PreviewPanel;
    private TableLayoutPanel tableLayoutPanel2;
    private Button button1;

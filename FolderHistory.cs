@@ -25,7 +25,6 @@ public static class FolderHistory
       if (_current <= 0)
          return null;
       _current--;
-      Debug.WriteLine($"Navigating back to {History[_current]}");
       return History[_current];
    }
 
@@ -34,7 +33,6 @@ public static class FolderHistory
       if (_current >= History.Count - 1)
          return null;
       _current++;
-      Debug.WriteLine($"Navigating forward to {History[_current]}");
       return History[_current];
    }
 
@@ -53,6 +51,5 @@ public static class FolderHistory
    }
 
    public static int GetMaxSize() => _maxSize;
-   
    public static int GetCurrent() => _current;
 }
