@@ -59,6 +59,7 @@ public static class FileTreeViewHelper
       node.Nodes.Clear();
       try
       {
+         node.TreeView.BeginUpdate();
          foreach (var item in Directory.EnumerateDirectories(node.FullPath + Path.DirectorySeparatorChar))
          {
             node.Nodes.Add(Path.GetFileName(item));
@@ -67,8 +68,16 @@ public static class FileTreeViewHelper
             node.Expand();
          }
       }
-      catch (UnauthorizedAccessException) { }
-      catch (IOException) { }
+      catch (UnauthorizedAccessException)
+      {
+      }
+      catch (IOException)
+      {
+      }
+      finally
+      {
+         node.TreeView.EndUpdate();
+      }
    }
 
 }

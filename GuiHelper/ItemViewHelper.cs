@@ -24,6 +24,7 @@ public static class ItemViewHelper
             new ColumnHeader { Text = "Size", Width = 100, TextAlign = HorizontalAlignment.Right},
          }
       };
+      State.ItemListView.SuspendLayout();
       State.HPWindow.ViewSplitContainer.Panel1.Controls.Clear();
       State.HPWindow.ViewSplitContainer.Panel1.Controls.Add(State.ItemListView);
       var path = node.FullPath + Path.DirectorySeparatorChar;
@@ -58,5 +59,14 @@ public static class ItemViewHelper
          }
       }
       State.ItemListView.Items.AddRange(items.ToArray());
+      State.ItemListView.BeginUpdate();
+      State.ItemListView.SuspendLayout();
+      State.ItemListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+      State.ItemListView.ResumeLayout(false);
+      State.ItemListView.PerformLayout();
+      State.ItemListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+      State.ItemListView.EndUpdate();
+      State.ItemListView.ResumeLayout(true);
+
    }
 }
