@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 using Hex_plorer.GuiHelper;
+using Microsoft.Win32;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 
 namespace Hex_plorer.GuiElements;
@@ -15,6 +16,7 @@ public class SortedListView : ListView
    {
       ColumnClick += new(OnColumnClick);
       MouseClick += new(OnClick);
+      MouseDoubleClick += new(OnDoubleClick);
       _sortedColumn = -1;
    }
 
@@ -35,15 +37,37 @@ public class SortedListView : ListView
    private void OnClick(object? sender, EventArgs e)
    {
       var clientPoint = PointToClient(MousePosition);
-      var item = GetItemAt(clientPoint.X, clientPoint.Y);
+      var item = this.GetItemAt(clientPoint.X, clientPoint.Y);
       if (item == null)
          return;
 
-      var itemPath = Path.Combine(FolderHistory.GetCurrentPath(), item.SubItems[0].Text);
+      var current = FolderHistory.GetCurrentPath();
+      if (current == null)
+         return;
+      var itemPath = Path.Combine(current, item.SubItems[0].Text);
       if (File.Exists(itemPath)) 
          FilePreviewHelper.ShowPreview(Path.Combine(itemPath));
       else
          State.HPWindow.ViewSplitContainer.Panel2.Controls.Clear();
+   }
+
+   private void OnDoubleClick(object? sender, EventArgs e)
+   {
+      var clientPoint = PointToClient(MousePosition);
+      var item = this.GetItemAt(clientPoint.X, clientPoint.Y);
+      if (item == null)
+         return;
+
+      var current = FolderHistory.GetCurrentPath();
+      if (current == null)
+         return;
+      var itemPath = Path.Combine(current, item.SubItems[0].Text);
+      if (File.Exists(itemPath))
+      {
+         OpenFileHelper.OpenFileWithDefault(itemPath);
+      }
+      else
+         FileTreeViewHelper.NavigateTo(itemPath);
    }
 }
 

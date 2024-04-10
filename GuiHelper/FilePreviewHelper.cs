@@ -4,7 +4,8 @@ public enum FileType
 {
    Image,
    Text,
-
+   Table,
+   NONE
 }
 
 public static class FilePreviewHelper
@@ -20,6 +21,8 @@ public static class FilePreviewHelper
          case FileType.Image:
             ShowImagePreview(fullPath);
             break;
+         case FileType.NONE:
+            return;
       }
    }
 
@@ -90,13 +93,6 @@ public static class FilePreviewHelper
          case ".sh":
          case ".bat":
          case ".cmd":
-         case ".ps1":
-         case ".psm1":
-         case ".psd1":
-         case ".ps1xml":
-         case ".clixml":
-         case ".pssc":
-         case ".cdxml":
          case ".xaml":
          case ".xamlx":
             return FileType.Text;
@@ -113,7 +109,7 @@ public static class FilePreviewHelper
          case ".heif":
             return FileType.Image;
          default:
-            return FileType.Text;
+            return FileType.NONE;
       }
    }
 }

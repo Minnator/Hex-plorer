@@ -52,7 +52,10 @@ public static class FolderHistory
 
    public static int GetMaxSize() => _maxSize;
    public static int GetCurrent() => _current;
-   public static string GetCurrentPath() => History[_current];
+   public static string? GetCurrentPath()
+   {
+      return _current < 0 ? null : History[_current];
+   }
 
    public static void PrintHistory()
    {
