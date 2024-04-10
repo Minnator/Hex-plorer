@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 using Hex_plorer.GuiElements;
 
 namespace Hex_plorer.GuiHelper;
@@ -40,7 +39,7 @@ public static class ItemViewHelper
                info.Name,
                info.LastWriteTime.ToString(CultureInfo.InvariantCulture),
                info.Extension,
-               (info.Length / 1024) + " KB"
+               info.Length / 1024 + " KB"
             });
             itemRow.Tag = info.Length;
             items.Add(itemRow);

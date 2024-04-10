@@ -52,4 +52,13 @@ public static class FolderHistory
 
    public static int GetMaxSize() => _maxSize;
    public static int GetCurrent() => _current;
+   public static string GetCurrentPath() => History[_current];
+
+   public static void PrintHistory()
+   {
+      foreach (var path in History)
+      {
+         Debug.WriteLine(path);
+      }
+   }
 }

@@ -70,5 +70,6 @@ public partial class HexPlorerWindow : Form
          default:
             throw new ArgumentOutOfRangeException();
       }
+      
    }
 }
