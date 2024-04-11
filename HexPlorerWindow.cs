@@ -14,6 +14,7 @@ public partial class HexPlorerWindow : Form
    private void OpenFolderFileTreeView(object sender, EventArgs e)
    {
       FileTreeViewHelper.OpenFolderFileTreeView(FileTreeView.SelectedNode);
+      ItemViewHelper.DisplayList(FileTreeView.SelectedNode);
       FolderHistory.Add(FileTreeView.SelectedNode.FullPath);
    }
 
@@ -35,7 +36,7 @@ public partial class HexPlorerWindow : Form
       FolderHistory.Add(e.Node.FullPath);
    }
 
-   private void Form1_MouseDown(object sender, MouseEventArgs e)
+   public void NavigationButton_MouseDown(object? sender, MouseEventArgs e)
    {
       switch (e.Button)
       {
@@ -70,6 +71,6 @@ public partial class HexPlorerWindow : Form
          default:
             throw new ArgumentOutOfRangeException();
       }
-      
+      FolderHistory.Add(nodeBelowCursor.FullPath);
    }
 }

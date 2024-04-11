@@ -4,22 +4,24 @@ namespace Hex_plorer.GuiHelper;
 
 public static class FileTreeViewHelper
 {
-   internal static void NavigateTo(string? path)
+   internal static TreeNode? NavigateTo(string? path)
    {
       if (string.IsNullOrEmpty(path))
-         return;
+         return null;
       IsLoadingPath = true;
       AddDisksToTreeView();
       var pathParts = path.Split(Path.DirectorySeparatorChar);
+      TreeNode? currentNode = null;
 
       foreach (var part in pathParts)
       {
-         var currentNode = FindNodeInTree(HPWindow.FileTreeView.Nodes, part);
+         currentNode = FindNodeInTree(HPWindow.FileTreeView.Nodes, part);
          if (currentNode == null)
-            return;
+            continue;
          OpenFolderFileTreeView(currentNode);
       }
       IsLoadingPath = false;
+      return currentNode;
    }
 
    // Find a node in the tree view RECURSIVELY
@@ -57,27 +59,20 @@ public static class FileTreeViewHelper
    internal static void OpenFolderFileTreeView(TreeNode node)
    {
       node.Nodes.Clear();
-      try
+      node.TreeView.BeginUpdate();
+      foreach (var item in Directory.EnumerateDirectories(node.FullPath + Path.DirectorySeparatorChar))
       {
-         node.TreeView.BeginUpdate();
-         foreach (var item in Directory.EnumerateDirectories(node.FullPath + Path.DirectorySeparatorChar))
+         try
          {
             node.Nodes.Add(Path.GetFileName(item));
             if (Directory.EnumerateDirectories(item).Any())
                node.Nodes[^1].Nodes.Add(new TreeNode());
             node.Expand();
          }
+         catch (UnauthorizedAccessException) { }
+         catch (IOException) { }
       }
-      catch (UnauthorizedAccessException)
-      {
-      }
-      catch (IOException)
-      {
-      }
-      finally
-      {
-         node.TreeView.EndUpdate();
-      }
+      node.TreeView.EndUpdate();
    }
 
 }

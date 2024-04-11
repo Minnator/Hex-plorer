@@ -107,7 +107,7 @@ partial class HexPlorerWindow
       FileTreeView.AfterExpand += FileTreeView_AfterExpand;
       FileTreeView.Click += FileTreeView_Click;
       FileTreeView.DoubleClick += OpenFolderFileTreeView;
-      FileTreeView.MouseDown += Form1_MouseDown;
+      FileTreeView.MouseDown += NavigationButton_MouseDown;
       // 
       // ViewSplitContainer
       // 
@@ -284,7 +284,7 @@ partial class HexPlorerWindow
       Controls.Add(toolStripContainer1);
       Name = "HexPlorerWindow";
       Text = "Hex-Plorer";
-      MouseDown += Form1_MouseDown;
+      MouseDown += NavigationButton_MouseDown;
       tableLayoutPanel1.ResumeLayout(false);
       splitContainer1.Panel1.ResumeLayout(false);
       splitContainer1.Panel2.ResumeLayout(false);

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Hex_plorer.ControlExtensions;
 using Hex_plorer.GuiElements;
 
 namespace Hex_plorer.GuiHelper;
@@ -12,7 +13,6 @@ public static class ItemViewHelper
          Dock = DockStyle.Fill,
          View = View.Details,
          FullRowSelect = true,
-         GridLines = false,
          HideSelection = false,
          MultiSelect = true,
          Sorting = SortOrder.Ascending,
@@ -22,8 +22,9 @@ public static class ItemViewHelper
             new ColumnHeader { Text = "Date modified", Width = 200 },
             new ColumnHeader { Text = "Type", Width = 100 },
             new ColumnHeader { Text = "Size", Width = 100, TextAlign = HorizontalAlignment.Right},
-         }
+         },
       };
+      State.ItemListView.DoubleBuffered(true);
       State.ItemListView.SuspendLayout();
       State.HPWindow.ViewSplitContainer.Panel1.Controls.Clear();
       State.HPWindow.ViewSplitContainer.Panel1.Controls.Add(State.ItemListView);
@@ -35,6 +36,8 @@ public static class ItemViewHelper
          if (File.Exists(item))
          {
             var info = new FileInfo(item);
+            //if (!CanReadFileInfo(info))
+               //continue;
             var itemRow = new ListViewItem(new[]
             {
                info.Name,
@@ -48,6 +51,8 @@ public static class ItemViewHelper
          else if (Directory.Exists(item))
          {
             var info = new DirectoryInfo(item);
+            if (!CanReadDirectoryInfo(info))
+               continue;
             var itemRow = new ListViewItem(new[]
             {
                info.Name,
@@ -68,5 +73,42 @@ public static class ItemViewHelper
       State.ItemListView.EndUpdate();
       State.ItemListView.ResumeLayout(true);
 
+   }
+
+   // Method to check if you have access to a DirectoryInfo
+   private static bool CanReadDirectoryInfo(DirectoryInfo directoryInfo)
+   {
+      try
+      {
+         foreach (var _ in directoryInfo.EnumerateFiles()) { }
+         foreach (var _ in directoryInfo.EnumerateDirectories()) { }
+         return true;
+      }
+      catch (UnauthorizedAccessException)
+      {
+         return false;
+      }
+      catch (IOException)
+      {
+         return false;
+      }
+   }
+
+   // Method to check if you have access to a FileInfo
+   private static bool CanReadFileInfo(FileInfo fileInfo)
+   {
+      try
+      {
+         using (fileInfo.OpenRead()) { }
+         return true;
+      }
+      catch (UnauthorizedAccessException)
+      {
+         return false;
+      }
+      catch (IOException)
+      {
+         return false;
+      }
    }
 }

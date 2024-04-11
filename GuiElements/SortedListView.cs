@@ -17,6 +17,7 @@ public class SortedListView : ListView
       ColumnClick += new(OnColumnClick);
       MouseClick += new(OnClick);
       MouseDoubleClick += new(OnDoubleClick);
+      MouseDown += new(State.HPWindow.NavigationButton_MouseDown);
       _sortedColumn = -1;
    }
 
@@ -67,8 +68,16 @@ public class SortedListView : ListView
          OpenFileHelper.OpenFileWithDefault(itemPath);
       }
       else
-         FileTreeViewHelper.NavigateTo(itemPath);
+      {
+         var node = FileTreeViewHelper.NavigateTo(itemPath);
+         if (node != null)
+         {
+            ItemViewHelper.DisplayList(node);
+            FolderHistory.Add(node.FullPath);
+         }
+      }
    }
+   
 }
 
 public class ListViewItemComparer : IComparer
