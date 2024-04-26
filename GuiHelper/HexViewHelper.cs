@@ -21,14 +21,14 @@ public static class HexViewHelper
 
       foreach (var dir in DataHelper.GetAllDirectories(path))
       {
-         var panel = GetHexPanel(dir.FullName, ItemType.Directory, window);
+         var panel= GetHexLayoutPanel(dir.FullName, ItemType.Directory, window);
          flowPanel.Controls.Add(panel);
       }
 
       foreach (var file in DataHelper.GetAllFiles(path))
       {
          var type = File.GetAttributes(file.FullName) == FileAttributes.Directory ? ItemType.Directory : ItemType.File;
-         var panel = GetHexPanel(file.FullName, type, window);
+         var panel = GetHexLayoutPanel(file.FullName, type, window);
          flowPanel.Controls.Add(panel);
       }
 
@@ -36,26 +36,43 @@ public static class HexViewHelper
       window.ViewSplitContainer.Panel1.Controls.Add(flowPanel);
    }
 
-   public static HexPanel GetHexPanel(string path, ItemType type, HexPlorerWindow window)
+   private static HexLayoutPanel GetHexLayoutPanel(string path, ItemType type, HexPlorerWindow window)
+   {
+      var panel = new HexLayoutPanel();
+      panel.BackColor = Color.DimGray;
+      panel.Padding = new Padding(1);
+      panel.Margin = new Padding(4);
+      panel.ColumnCount = 1;
+      panel.RowCount = 2;
+      panel.BorderStyle = BorderStyle.FixedSingle;
+      panel.Width = 100;
+      panel.Height = 140;
+      
+      panel.SetContent(path, type, window);
+      return panel;
+   }
+
+   public static HexPanel GetHexPanel(string path, ItemType type, HexPlorerWindow window, int width, int height)
    {
       var panel = new HexPanel(window)
       {
          Path = path,
          ItemType = type,
-         Name = Path.GetFileName(path),
-         Width = 100,
-         Height = 130,
+         EntryName = Path.GetFileName(path),
+         Margin = new Padding(0),
+         Width = width,
+         Height = height,
          BackColor = Color.DimGray
       };
       return panel;
    }
 
-   public static TextBox GetTextBox(string path, HexPlorerWindow window)
+   public static HexTextBox GetTextBox(string path, string name, HexPlorerWindow window, int width, int height)
    {
-      var textBox = new TextBox
+      var textBox = new HexTextBox(window)
       {
-         Text = path,
-         Dock = DockStyle.Fill,
+         Path = path,
+         Text = name,
          Multiline = true,
          ReadOnly = true,
          BackColor = Color.DimGray,
@@ -63,6 +80,11 @@ public static class HexViewHelper
          Font = new Font("VeraMono", 8),
          BorderStyle = BorderStyle.None,
          ScrollBars = ScrollBars.None,
+         Padding = new Padding(0),
+         Margin = new Padding(0),
+         TextAlign = HorizontalAlignment.Center,
+         Width = width,
+         Height = height
       };
       return textBox;
    }

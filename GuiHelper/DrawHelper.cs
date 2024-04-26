@@ -2,17 +2,19 @@
 
 public static class DrawHelper
 {
-   public static void DrawHex(Graphics g, int height, int width, Color color, int penWidth = 2)
+   public static void DrawHex(Graphics g, int height, int width, Color color, int penWidth = 2, int padding = 1)
    {
+      width -= padding;
+      height -= padding;
       var w = penWidth / 2;
       var points = new[]
       {
-         new Point(width / 2 + w, 0 + w),
-         new Point(width - w, height / 4 + w),
-         new Point(width - w, height * 3 / 4 + w),
-         new Point(width / 2 + w, height - penWidth),
-         new Point(0 + w, height * 3 / 4 + w),
-         new Point(0 + w, height / 4 + w),
+         new Point(width / 2 - w + padding * 2, 0 + w + padding * 2),
+         new Point(width - penWidth, height / 4 + penWidth),
+         new Point(width - penWidth, height * 3 / 4),
+         new Point(width / 2 - w + padding * 2, height - penWidth),
+         new Point(0 + w + padding * 2, height * 3 / 4 + w),
+         new Point(0 + w + padding * 2, height / 4 + w),
       };
 
       var pen = new Pen(color, penWidth);

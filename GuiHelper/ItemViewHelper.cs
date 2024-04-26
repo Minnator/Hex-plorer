@@ -46,7 +46,7 @@ public static class ItemViewHelper
          Sorting = SortOrder.Ascending,
          Columns =
         {
-            new ColumnHeader { Text = "Name", Width = 200 },
+            new ColumnHeader { Text = "EntryName", Width = 200 },
             new ColumnHeader { Text = "Date modified", Width = 200 },
             new ColumnHeader { Text = "Type", Width = 100 },
             new ColumnHeader { Text = "Size", Width = 100, TextAlign = HorizontalAlignment.Right },

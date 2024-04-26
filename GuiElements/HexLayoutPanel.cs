@@ -1,29 +1,44 @@
 ﻿namespace Hex_plorer.GuiElements;
 
-public sealed class HexLayoutPanel : TableLayoutPanel
+public class HexLayoutPanel : TableLayoutPanel
 {
-   public HexPanel Panel { get; set; }
-   public TextBox TextBox { get; set; }
+   public HexPanel Panel { get; set; } = null!;
+   public HexTextBox TextBox { get; set; } = null!;
 
-   public HexLayoutPanel(string path, ItemType type, HexPlorerWindow window)
+   public HexLayoutPanel()
    {
-      Panel = HexViewHelper.GetHexPanel(path, type, window);
-      TextBox = HexViewHelper.GetTextBox(path, window);
+      MouseEnter += OnMouseEnter;
+      MouseLeave += OnMouseLeave;
+   }
+
+   public void SetContent(string path, ItemType type, HexPlorerWindow window)
+   {
       
-      ColumnCount = 1;
-      RowCount = 2;
-      Dock = DockStyle.Fill;
-      Padding = new Padding(2);
-      BackColor = Color.DimGray;
+      Panel = HexViewHelper.GetHexPanel(path, type, window, 100 - Padding.All * 4, 100 - Padding.All * 4);
+      TextBox = HexViewHelper.GetTextBox(path, Panel.EntryName, window, 100 - Padding.All * 4, 40);
 
       Controls.Add(Panel, 0, 0);
       Controls.Add(TextBox, 0, 1);
+
    }
 
    public void OnMouseEnter(object? sender, EventArgs e)
    {
-      Panel.BackColor = Color.LightGray;
+      Highlight();
    }
 
+   public void OnMouseLeave(object? sender, EventArgs e)
+   {
+      UnHighlight();
+   }
 
+   public void Highlight()
+   {
+      BackColor = Color.Aqua;
+   }
+
+   public void UnHighlight()
+   {
+      BackColor = Color.DimGray;
+   }
 }
