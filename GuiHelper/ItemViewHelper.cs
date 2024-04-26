@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using Hex_plorer.ControlExtensions;
 using Hex_plorer.GuiElements;
 
@@ -15,11 +16,11 @@ public static class ItemViewHelper
       {
          case ItemDisplayMode.Hex:
             Debug.WriteLine("Rendering Hex");
-            HexViewHelper.DisplayEmptyHex(node.FullPath, window);
+            HexViewHelper.DisplayHex(node.FullPath, window);
             break;
          case ItemDisplayMode.List:
             Debug.WriteLine("Rendering List");
-            ItemViewHelper.DisplayList(node, window);
+            DisplayList(node, window);
             break;
          default:
             throw new ArgumentOutOfRangeException();
@@ -63,43 +64,29 @@ public static class ItemViewHelper
       var path = node.FullPath + Path.DirectorySeparatorChar;
       var items = new List<ListViewItem>();
 
-      foreach (var item in Directory.EnumerateFileSystemEntries(path))
+      foreach (var file in DataHelper.GetAllFiles(path))
       {
-         if (File.Exists(item))
-         {
-            var info = new FileInfo(item);
-            var itemRow = new ListViewItem([
-               info.Name,
-               info.LastWriteTime.ToString(CultureInfo.InvariantCulture),
-               info.Extension,
-               (info.Length / 1024).ToString() + " KB"
-            ]);
-            itemRow.Tag = info.Length;
-
-            //var imageIndex = State.ItemImageList.Images.Count;
-            //ImageListHelper.AddImage(item);
-            //itemRow.ImageIndex = imageIndex;
-
-            items.Add(itemRow);
-         }
-         else if (Directory.Exists(item))
-         {
-            var info = new DirectoryInfo(item);
-            if (!CanReadDirectoryInfo(info))
-               continue;
-            var itemRow = new ListViewItem(new[]
-            {
-                info.Name,
-                info.LastWriteTime.ToString(CultureInfo.InvariantCulture),
-                "File folder",
-                ""
-            });
-            //var imageIndex = State.ItemImageList.Images.Count;
-            //ImageListHelper.AddImage(Environment.GetFolderPath/(Environment.SpecialFolder.Desktop));
-            //itemRow.ImageIndex = imageIndex;
-            items.Add(itemRow);
-         }
+         var itemRow = new ListViewItem([
+            file.Name,
+            file.LastWriteTime.ToString(CultureInfo.InvariantCulture),
+            file.Extension,
+            file.Length / 1024 + " KB"
+         ]);
+         itemRow.Tag = file.Length;
+         items.Add(itemRow);
       }
+
+      foreach (var dir in DataHelper.GetAllDirectories(path))
+      {
+         var itemRow = new ListViewItem([
+            dir.Name,
+            dir.LastWriteTime.ToString(CultureInfo.InvariantCulture),
+            "File folder",
+            ""
+         ]);
+         items.Add(itemRow);
+      }
+
       window.HexState.ItemListView.BeginUpdate();
       window.HexState.ItemListView.Items.AddRange(items.ToArray());
       window.HexState.ItemListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
@@ -110,40 +97,7 @@ public static class ItemViewHelper
    }
 
 
-   // Method to check if you have access to a DirectoryInfo
-   private static bool CanReadDirectoryInfo(DirectoryInfo directoryInfo)
-   {
-      try
-      {
-         foreach (var _ in directoryInfo.EnumerateFiles()) { }
-         foreach (var _ in directoryInfo.EnumerateDirectories()) { }
-         return true;
-      }
-      catch (UnauthorizedAccessException)
-      {
-         return false;
-      }
-      catch (IOException)
-      {
-         return false;
-      }
-   }
+   
 
-   // Method to check if you have access to a FileInfo
-   private static bool CanReadFileInfo(FileInfo fileInfo)
-   {
-      try
-      {
-         using (fileInfo.OpenRead()) { }
-         return true;
-      }
-      catch (UnauthorizedAccessException)
-      {
-         return false;
-      }
-      catch (IOException)
-      {
-         return false;
-      }
-   }
+   
 }

@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
 using Hex_plorer.ControlExtensions;
+using Hex_plorer.GuiElements;
 
 namespace Hex_plorer;
 
 public static class HexViewHelper
 {
-   public static void DisplayEmptyHex(string path, HexPlorerWindow window)
+   public static void DisplayHex(string path, HexPlorerWindow window)
    {
+      path += Path.DirectorySeparatorChar;
       window.HexState.FlowPanelHexView?.Dispose();
       var flowPanel = new FlowLayoutPanel
       {
@@ -17,24 +19,16 @@ public static class HexViewHelper
          Padding = new Padding(5),
       };
 
-      foreach (var file in Directory.GetFiles(path))
+      foreach (var dir in DataHelper.GetAllDirectories(path))
       {
-         if (File.Exists(file))
-         {
-            var type = File.GetAttributes(file) == FileAttributes.Directory ? ItemType.Directory : ItemType.File;
-            var panel = GetHexPanel(file, type);
-            flowPanel.Controls.Add(panel);
-         }
-         else
-         {
-            Debug.WriteLine($"File not found: {file}");
-         }
+         var panel = GetHexPanel(dir.FullName, ItemType.Directory, window);
+         flowPanel.Controls.Add(panel);
       }
 
-      foreach (var dir in Directory.GetDirectories(path))
+      foreach (var file in DataHelper.GetAllFiles(path))
       {
-         var panel = GetHexPanel(dir, ItemType.Directory);
-         panel.BackColor = Color.LightSkyBlue;
+         var type = File.GetAttributes(file.FullName) == FileAttributes.Directory ? ItemType.Directory : ItemType.File;
+         var panel = GetHexPanel(file.FullName, type, window);
          flowPanel.Controls.Add(panel);
       }
 
@@ -42,17 +36,34 @@ public static class HexViewHelper
       window.ViewSplitContainer.Panel1.Controls.Add(flowPanel);
    }
 
-   private static HexPanel GetHexPanel(string path, ItemType type)
+   public static HexPanel GetHexPanel(string path, ItemType type, HexPlorerWindow window)
    {
-      var panel = new HexPanel
+      var panel = new HexPanel(window)
       {
          Path = path,
          ItemType = type,
          Name = Path.GetFileName(path),
          Width = 100,
          Height = 130,
-         BackColor = Color.DarkOliveGreen
+         BackColor = Color.DimGray
       };
       return panel;
+   }
+
+   public static TextBox GetTextBox(string path, HexPlorerWindow window)
+   {
+      var textBox = new TextBox
+      {
+         Text = path,
+         Dock = DockStyle.Fill,
+         Multiline = true,
+         ReadOnly = true,
+         BackColor = Color.DimGray,
+         ForeColor = Color.CadetBlue,
+         Font = new Font("VeraMono", 8),
+         BorderStyle = BorderStyle.None,
+         ScrollBars = ScrollBars.None,
+      };
+      return textBox;
    }
 }

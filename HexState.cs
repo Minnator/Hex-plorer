@@ -11,7 +11,6 @@ public class HexState
    public bool IsLoadingPath { get; set; }
    public ItemDisplayMode ItemDisplayMode { get; set; } = ItemDisplayMode.Hex;
    public SearchOptions SearchOptions { get; set; }
-
    // Item View
    public ListView ItemListView { get; set; } = null!;
    public ImageList ItemImageList { get; set; } = null!;

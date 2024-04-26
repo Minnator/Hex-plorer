@@ -2,7 +2,7 @@
 
 public static class DrawHelper
 {
-   public static void DrawHex(Graphics g, int height, int width, int penWidth = 2)
+   public static void DrawHex(Graphics g, int height, int width, Color color, int penWidth = 2)
    {
       var w = penWidth / 2;
       var points = new[]
@@ -15,7 +15,7 @@ public static class DrawHelper
          new Point(0 + w, height / 4 + w),
       };
 
-      var pen = new Pen(Color.Black, penWidth);
+      var pen = new Pen(color, penWidth);
       g.DrawPolygon(pen, points);
    }
 
@@ -26,4 +26,6 @@ public static class DrawHelper
       var y = rect.Y + (rect.Height - size.Height) / 2;
       g.DrawString(text, font, brush, x, y);
    }
+
+
 }
