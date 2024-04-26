@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using Hex_plorer.ControlExtensions;
 using Hex_plorer.GuiElements;
 
@@ -6,9 +7,35 @@ namespace Hex_plorer.GuiHelper;
 
 public static class ItemViewHelper
 {
-   public static void DisplayList(TreeNode node)
+   public static void LoadItemView(TreeNode node, HexPlorerWindow window)
    {
-      State.ItemListView = new SortedListView
+      ClearItemView(window);
+
+      switch (window.HexState.ItemDisplayMode)
+      {
+         case ItemDisplayMode.Hex:
+            Debug.WriteLine("Rendering Hex");
+            HexViewHelper.DisplayEmptyHex(node.FullPath, window);
+            break;
+         case ItemDisplayMode.List:
+            Debug.WriteLine("Rendering List");
+            ItemViewHelper.DisplayList(node, window);
+            break;
+         default:
+            throw new ArgumentOutOfRangeException();
+      }
+      FolderHistory.Add(node.FullPath);
+   }
+
+   private static void ClearItemView(HexPlorerWindow window)
+   {
+      window.HexState.ItemListView?.Dispose();
+      window.HexState.FlowPanelHexView?.Dispose();
+   }
+
+   public static void DisplayList(TreeNode node, HexPlorerWindow window)
+   {
+      window.HexState.ItemListView = new SortedListView(window)
       {
          Dock = DockStyle.Fill,
          View = View.Details,
@@ -17,17 +44,22 @@ public static class ItemViewHelper
          MultiSelect = true,
          Sorting = SortOrder.Ascending,
          Columns =
-         {
+        {
             new ColumnHeader { Text = "Name", Width = 200 },
             new ColumnHeader { Text = "Date modified", Width = 200 },
             new ColumnHeader { Text = "Type", Width = 100 },
-            new ColumnHeader { Text = "Size", Width = 100, TextAlign = HorizontalAlignment.Right},
-         },
+            new ColumnHeader { Text = "Size", Width = 100, TextAlign = HorizontalAlignment.Right },
+        },
       };
-      State.ItemListView.DoubleBuffered(true);
-      State.ItemListView.SuspendLayout();
-      State.HPWindow.ViewSplitContainer.Panel1.Controls.Clear();
-      State.HPWindow.ViewSplitContainer.Panel1.Controls.Add(State.ItemListView);
+
+      //ImageListHelper.SetImageList();
+      //State.ItemListView.LargeImageList = State.ItemImageList; // Assign ImageList to ListView
+
+      window.HexState.ItemListView.DoubleBuffered(true);
+      window.HexState.ItemListView.SuspendLayout();
+      window.ViewSplitContainer.Panel1.Controls.Clear();
+      window.ViewSplitContainer.Panel1.Controls.Add(window.HexState.ItemListView);
+
       var path = node.FullPath + Path.DirectorySeparatorChar;
       var items = new List<ListViewItem>();
 
@@ -36,16 +68,18 @@ public static class ItemViewHelper
          if (File.Exists(item))
          {
             var info = new FileInfo(item);
-            //if (!CanReadFileInfo(info))
-               //continue;
-            var itemRow = new ListViewItem(new[]
-            {
+            var itemRow = new ListViewItem([
                info.Name,
                info.LastWriteTime.ToString(CultureInfo.InvariantCulture),
                info.Extension,
-               info.Length / 1024 + " KB"
-            });
+               (info.Length / 1024).ToString() + " KB"
+            ]);
             itemRow.Tag = info.Length;
+
+            //var imageIndex = State.ItemImageList.Images.Count;
+            //ImageListHelper.AddImage(item);
+            //itemRow.ImageIndex = imageIndex;
+
             items.Add(itemRow);
          }
          else if (Directory.Exists(item))
@@ -55,25 +89,26 @@ public static class ItemViewHelper
                continue;
             var itemRow = new ListViewItem(new[]
             {
-               info.Name,
-               info.LastWriteTime.ToString(CultureInfo.InvariantCulture),
-               "File folder",
-               ""
+                info.Name,
+                info.LastWriteTime.ToString(CultureInfo.InvariantCulture),
+                "File folder",
+                ""
             });
+            //var imageIndex = State.ItemImageList.Images.Count;
+            //ImageListHelper.AddImage(Environment.GetFolderPath/(Environment.SpecialFolder.Desktop));
+            //itemRow.ImageIndex = imageIndex;
             items.Add(itemRow);
          }
       }
-      State.ItemListView.Items.AddRange(items.ToArray());
-      State.ItemListView.BeginUpdate();
-      State.ItemListView.SuspendLayout();
-      State.ItemListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-      State.ItemListView.ResumeLayout(false);
-      State.ItemListView.PerformLayout();
-      State.ItemListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-      State.ItemListView.EndUpdate();
-      State.ItemListView.ResumeLayout(true);
-
+      window.HexState.ItemListView.BeginUpdate();
+      window.HexState.ItemListView.Items.AddRange(items.ToArray());
+      window.HexState.ItemListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+      window.HexState.ItemListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+      window.HexState.ItemListView.ResumeLayout(false);
+      window.HexState.ItemListView.PerformLayout();
+      window.HexState.ItemListView.EndUpdate();
    }
+
 
    // Method to check if you have access to a DirectoryInfo
    private static bool CanReadDirectoryInfo(DirectoryInfo directoryInfo)

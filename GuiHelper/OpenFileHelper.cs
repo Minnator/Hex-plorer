@@ -23,4 +23,25 @@ public static class OpenFileHelper
          MessageBox.Show($"Error opening file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
    }
+
+   public static void OpenFileWith(string path, string program)
+   {
+      if (!File.Exists(path))
+         return;
+
+      try
+      {
+         Process.Start(new ProcessStartInfo
+         {
+            FileName = program,
+            Arguments = path,
+            UseShellExecute = true
+         });
+      }
+      catch (Exception ex)
+      {
+         MessageBox.Show($"Error opening file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+   }
+
 }

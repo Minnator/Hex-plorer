@@ -1,26 +1,24 @@
-﻿using static Hex_plorer.State;
-
-namespace Hex_plorer.GuiHelper;
+﻿namespace Hex_plorer.GuiHelper;
 
 public static class FileTreeViewHelper
 {
-   internal static TreeNode? NavigateTo(string? path)
+   internal static TreeNode? NavigateTo(string? path, HexPlorerWindow window)
    {
       if (string.IsNullOrEmpty(path))
          return null;
-      IsLoadingPath = true;
-      AddDisksToTreeView();
+      window.HexState.IsLoadingPath = true;
+      AddDisksToTreeView(window);
       var pathParts = path.Split(Path.DirectorySeparatorChar);
       TreeNode? currentNode = null;
 
       foreach (var part in pathParts)
       {
-         currentNode = FindNodeInTree(HPWindow.FileTreeView.Nodes, part);
+         currentNode = FindNodeInTree(window.FileTreeView.Nodes, part);
          if (currentNode == null)
             continue;
          OpenFolderFileTreeView(currentNode);
       }
-      IsLoadingPath = false;
+      window.HexState.IsLoadingPath = false;
       return currentNode;
    }
 
@@ -39,25 +37,26 @@ public static class FileTreeViewHelper
    }
 
    // Add disks to the tree view
-   internal static void AddDisksToTreeView()
+   internal static void AddDisksToTreeView(HexPlorerWindow window)
    {
-      HPWindow.FileTreeView.Nodes.Clear();
+      window.FileTreeView.Nodes.Clear();
       foreach (var drive in DriveInfo.GetDrives())
       {
          // verify that the disc is connected to the computer
          if (!drive.IsReady)
             continue;
          var root = new TreeNode(drive.Name.Trim(Path.DirectorySeparatorChar));
-         HPWindow.FileTreeView.Nodes.Add(root);
+         window.FileTreeView.Nodes.Add(root);
          root.Nodes.Add(new TreeNode());
       }
 
-      HPWindow.FileTreeView.SelectedNode = null;
+      window.FileTreeView.SelectedNode = null;
    }
 
    // Open the folder in the tree view and catch exceptions for unauthorized access and IO exceptions
    internal static void OpenFolderFileTreeView(TreeNode node)
    {
+      node.TreeView.SuspendLayout();
       node.Nodes.Clear();
       node.TreeView.BeginUpdate();
       foreach (var item in Directory.EnumerateDirectories(node.FullPath + Path.DirectorySeparatorChar))
@@ -72,6 +71,8 @@ public static class FileTreeViewHelper
          catch (UnauthorizedAccessException) { }
          catch (IOException) { }
       }
+      node.TreeView.ResumeLayout(false);
+      node.TreeView.PerformLayout();
       node.TreeView.EndUpdate();
    }
 

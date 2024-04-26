@@ -1,4 +1,7 @@
-﻿namespace Hex_plorer.GuiHelper;
+﻿using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using TextBox = System.Windows.Forms.TextBox;
+
+namespace Hex_plorer.GuiHelper;
 
 public enum FileType
 {
@@ -10,25 +13,24 @@ public enum FileType
 
 public static class FilePreviewHelper
 {
-   public static void ShowPreview(string fullPath)
+   public static void ShowPreview(string fullPath, HexPlorerWindow window)
    {
-      var fileType = GetFileType(fullPath);
-      switch (fileType)
+      switch (GetFileType(fullPath))
       {
          case FileType.Text:
-            ShowTextPreview(fullPath);
+            ShowTextPreview(fullPath, window);
             break;
          case FileType.Image:
-            ShowImagePreview(fullPath);
+            ShowImagePreview(fullPath, window);
             break;
          case FileType.NONE:
             return;
       }
    }
 
-   public static void ShowTextPreview(string fullPath)
+   public static void ShowTextPreview(string fullPath, HexPlorerWindow window)
    {
-      State.HPWindow.ViewSplitContainer.Panel2.Controls.Clear();
+      window.ViewSplitContainer.Panel2.Controls.Clear();
       var textBox = new TextBox
       {
          Dock = DockStyle.Fill,
@@ -39,7 +41,7 @@ public static class FilePreviewHelper
          Text = File.ReadAllText(fullPath),
          HideSelection = false,
       };
-      State.HPWindow.ViewSplitContainer.Panel2.Controls.Add(textBox);
+      window.ViewSplitContainer.Panel2.Controls.Add(textBox);
 
       try
       {
@@ -49,16 +51,16 @@ public static class FilePreviewHelper
       catch (IOException) { }
    }
 
-   public static void ShowImagePreview(string fullPath)
+   public static void ShowImagePreview(string fullPath, HexPlorerWindow window)
    {
-      State.HPWindow.ViewSplitContainer.Panel2.Controls.Clear();
+      window.ViewSplitContainer.Panel2.Controls.Clear();
       var pictureBox = new PictureBox
       {
          Dock = DockStyle.Fill,
          SizeMode = PictureBoxSizeMode.Zoom,
          Image = Image.FromFile(fullPath),
       };
-      State.HPWindow.ViewSplitContainer.Panel2.Controls.Add(pictureBox);
+      window.ViewSplitContainer.Panel2.Controls.Add(pictureBox);
 
       try
       {
@@ -68,6 +70,12 @@ public static class FilePreviewHelper
       catch (IOException) { }
    }
 
+   public static void DisposeComponents(HexPlorerWindow window)
+   {
+      foreach (Control control in window.ViewSplitContainer.Panel2.Controls) control.Dispose();
+      window.ViewSplitContainer.Panel2.Controls.Clear();
+      GC.Collect();
+   }
 
    public static FileType GetFileType(string fullPath)
    {
@@ -112,4 +120,5 @@ public static class FilePreviewHelper
             return FileType.NONE;
       }
    }
+
 }

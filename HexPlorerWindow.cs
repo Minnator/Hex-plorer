@@ -3,19 +3,12 @@
 namespace Hex_plorer;
 public partial class HexPlorerWindow : Form
 {
+   public HexState HexState { get; set; } = new HexState();
    public HexPlorerWindow()
    {
-      State.HPWindow = this;
       InitializeComponent();
       // Initialize the tree view
-      FileTreeViewHelper.AddDisksToTreeView();
-   }
-
-   private void OpenFolderFileTreeView(object sender, EventArgs e)
-   {
-      FileTreeViewHelper.OpenFolderFileTreeView(FileTreeView.SelectedNode);
-      ItemViewHelper.DisplayList(FileTreeView.SelectedNode);
-      FolderHistory.Add(FileTreeView.SelectedNode.FullPath);
+      FileTreeViewHelper.AddDisksToTreeView(this);
    }
 
    private void FileTreeView_AfterExpand(object sender, TreeViewEventArgs e)
@@ -23,7 +16,7 @@ public partial class HexPlorerWindow : Form
       if (e.Node == null)
          return;
       FileTreeViewHelper.OpenFolderFileTreeView(e.Node);
-      if (!State.IsLoadingPath)
+      if (!HexState.IsLoadingPath)
          FolderHistory.Add(e.Node.FullPath);
    }
 
@@ -44,14 +37,14 @@ public partial class HexPlorerWindow : Form
          case MouseButtons.XButton1:
             if (FolderHistory.GetCurrent() == 0)
             {
-               FileTreeViewHelper.AddDisksToTreeView();
+               FileTreeViewHelper.AddDisksToTreeView(this);
                return;
             }
-            FileTreeViewHelper.NavigateTo(FolderHistory.NavigateBack());
+            FileTreeViewHelper.NavigateTo(FolderHistory.NavigateBack(), this);
             break;
          // Mouse button 5 (forward)
          case MouseButtons.XButton2:
-            FileTreeViewHelper.NavigateTo(FolderHistory.NavigateForward());
+            FileTreeViewHelper.NavigateTo(FolderHistory.NavigateForward(), this);
             break;
       }
    }
@@ -61,16 +54,35 @@ public partial class HexPlorerWindow : Form
       if (FileTreeView.SelectedNode == null)
          return;
       var nodeBelowCursor = FileTreeView.GetNodeAt(FileTreeView.PointToClient(Cursor.Position));
-      switch (State.ItemDisplayMode)
-      {
-         case ItemDisplayMode.Hex:
-            break;
-         case ItemDisplayMode.List:
-            ItemViewHelper.DisplayList(nodeBelowCursor);
-            break;
-         default:
-            throw new ArgumentOutOfRangeException();
-      }
-      FolderHistory.Add(nodeBelowCursor.FullPath);
+      ItemViewHelper.LoadItemView(nodeBelowCursor, this);
    }
+
+   private void MatchCase_Click(object sender, EventArgs e) => MatchCase.Checked = !MatchCase.Checked;
+   private void UseDeepSearch_Click(object sender, EventArgs e) => MatchCase.Checked = !MatchCase.Checked;
+   private void UseRegex_Click(object sender, EventArgs e) => MatchCase.Checked = !MatchCase.Checked;
+   private void MatchFullWord_Click(object sender, EventArgs e) => MatchCase.Checked = !MatchCase.Checked;
+   private void viewToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+   {
+      ItemDisplayModeSelection.SelectedItem = HexState.ItemDisplayMode.ToString();
+   }
+
+   private void ItemDisplayModeSelection_SelectedIndexChanged(object sender, EventArgs e)
+   {
+      HexState.ItemDisplayMode = (ItemDisplayMode)Enum.Parse(typeof(ItemDisplayMode), ItemDisplayModeSelection.SelectedItem?.ToString() ?? "List");
+      ItemViewHelper.LoadItemView(FileTreeView.SelectedNode, this);
+   }
+
+
+
+   // ------------------------ Methods ------------------------ \\
+
+   public void SetPreview(string path)
+   {
+      if (HexState.LastPreviewPath.Equals(path))
+         return;
+      FilePreviewHelper.DisposeComponents(this);
+      if (File.Exists(path))
+         FilePreviewHelper.ShowPreview(path, this);
+   }
+
 }

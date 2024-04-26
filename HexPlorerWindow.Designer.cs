@@ -28,6 +28,12 @@ partial class HexPlorerWindow
    /// </summary>
    private void InitializeComponent()
    {
+      components = new System.ComponentModel.Container();
+      SearchOptionsStrip = new ContextMenuStrip(components);
+      UseDeepSearch = new ToolStripMenuItem();
+      MatchCase = new ToolStripMenuItem();
+      UseRegex = new ToolStripMenuItem();
+      MatchFullWord = new ToolStripMenuItem();
       tableLayoutPanel1 = new TableLayoutPanel();
       splitContainer1 = new SplitContainer();
       FileTreeView = new TreeView();
@@ -43,7 +49,34 @@ partial class HexPlorerWindow
       textBox1 = new TextBox();
       button5 = new Button();
       comboBox1 = new ComboBox();
-      toolStripContainer1 = new ToolStripContainer();
+      DirectoryContextMenu = new ContextMenuStrip(components);
+      openFolderToolStripMenuItem = new ToolStripMenuItem();
+      openInNewWindowToolStripMenuItem = new ToolStripMenuItem();
+      toolStripSeparator1 = new ToolStripSeparator();
+      copyToolStripMenuItem = new ToolStripMenuItem();
+      cutToolStripMenuItem = new ToolStripMenuItem();
+      deleteToolStripMenuItem = new ToolStripMenuItem();
+      renameToolStripMenuItem = new ToolStripMenuItem();
+      toolStripSeparator2 = new ToolStripSeparator();
+      createShortcutToolStripMenuItem1 = new ToolStripMenuItem();
+      toolStripSeparator3 = new ToolStripSeparator();
+      propertiesToolStripMenuItem = new ToolStripMenuItem();
+      FileContextMenu = new ContextMenuStrip(components);
+      openToolStripMenuItem = new ToolStripMenuItem();
+      openWithToolStripMenuItem = new ToolStripMenuItem();
+      toolStripSeparator4 = new ToolStripSeparator();
+      copyToolStripMenuItem1 = new ToolStripMenuItem();
+      cutToolStripMenuItem1 = new ToolStripMenuItem();
+      deleteToolStripMenuItem1 = new ToolStripMenuItem();
+      renameToolStripMenuItem1 = new ToolStripMenuItem();
+      toolStripSeparator5 = new ToolStripSeparator();
+      createShortcutToolStripMenuItem = new ToolStripMenuItem();
+      toolStripSeparator6 = new ToolStripSeparator();
+      propertiesToolStripMenuItem1 = new ToolStripMenuItem();
+      MainMenuStrip = new MenuStrip();
+      viewToolStripMenuItem = new ToolStripMenuItem();
+      ItemDisplayModeSelection = new ToolStripComboBox();
+      SearchOptionsStrip.SuspendLayout();
       tableLayoutPanel1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
       splitContainer1.Panel1.SuspendLayout();
@@ -55,9 +88,46 @@ partial class HexPlorerWindow
       tableLayoutPanel2.SuspendLayout();
       tableLayoutPanel3.SuspendLayout();
       tableLayoutPanel4.SuspendLayout();
-      toolStripContainer1.ContentPanel.SuspendLayout();
-      toolStripContainer1.SuspendLayout();
+      DirectoryContextMenu.SuspendLayout();
+      FileContextMenu.SuspendLayout();
+      MainMenuStrip.SuspendLayout();
       SuspendLayout();
+      // 
+      // SearchOptionsStrip
+      // 
+      SearchOptionsStrip.Items.AddRange(new ToolStripItem[] { UseDeepSearch, MatchCase, UseRegex, MatchFullWord });
+      SearchOptionsStrip.Name = "SearchOptionsStrip";
+      SearchOptionsStrip.Size = new Size(149, 92);
+      // 
+      // UseDeepSearch
+      // 
+      UseDeepSearch.Checked = true;
+      UseDeepSearch.CheckState = CheckState.Checked;
+      UseDeepSearch.Name = "UseDeepSearch";
+      UseDeepSearch.Size = new Size(148, 22);
+      UseDeepSearch.Text = "Deep Search";
+      UseDeepSearch.Click += UseDeepSearch_Click;
+      // 
+      // MatchCase
+      // 
+      MatchCase.Name = "MatchCase";
+      MatchCase.Size = new Size(148, 22);
+      MatchCase.Text = "Case Sensitive";
+      MatchCase.Click += MatchCase_Click;
+      // 
+      // UseRegex
+      // 
+      UseRegex.Name = "UseRegex";
+      UseRegex.Size = new Size(148, 22);
+      UseRegex.Text = "Regex";
+      UseRegex.Click += UseRegex_Click;
+      // 
+      // MatchFullWord
+      // 
+      MatchFullWord.Name = "MatchFullWord";
+      MatchFullWord.Size = new Size(148, 22);
+      MatchFullWord.Text = "Full Word";
+      MatchFullWord.Click += MatchFullWord_Click;
       // 
       // tableLayoutPanel1
       // 
@@ -66,13 +136,13 @@ partial class HexPlorerWindow
       tableLayoutPanel1.Controls.Add(splitContainer1, 0, 1);
       tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 0);
       tableLayoutPanel1.Dock = DockStyle.Fill;
-      tableLayoutPanel1.Location = new Point(0, 0);
+      tableLayoutPanel1.Location = new Point(0, 24);
       tableLayoutPanel1.Name = "tableLayoutPanel1";
       tableLayoutPanel1.RowCount = 2;
       tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
       tableLayoutPanel1.RowStyles.Add(new RowStyle());
-      tableLayoutPanel1.Size = new Size(1156, 697);
-      tableLayoutPanel1.TabIndex = 0;
+      tableLayoutPanel1.Size = new Size(1156, 673);
+      tableLayoutPanel1.TabIndex = 1;
       // 
       // splitContainer1
       // 
@@ -106,8 +176,6 @@ partial class HexPlorerWindow
       FileTreeView.AfterCollapse += FileTreeView_AfterCollapse;
       FileTreeView.AfterExpand += FileTreeView_AfterExpand;
       FileTreeView.Click += FileTreeView_Click;
-      FileTreeView.DoubleClick += OpenFolderFileTreeView;
-      FileTreeView.MouseDown += NavigationButton_MouseDown;
       // 
       // ViewSplitContainer
       // 
@@ -232,6 +300,7 @@ partial class HexPlorerWindow
       // 
       // textBox1
       // 
+      textBox1.ContextMenuStrip = SearchOptionsStrip;
       textBox1.Dock = DockStyle.Fill;
       textBox1.Location = new Point(3, 3);
       textBox1.Name = "textBox1";
@@ -258,33 +327,181 @@ partial class HexPlorerWindow
       comboBox1.Size = new Size(719, 23);
       comboBox1.TabIndex = 1;
       // 
-      // toolStripContainer1
+      // DirectoryContextMenu
       // 
+      DirectoryContextMenu.Items.AddRange(new ToolStripItem[] { openFolderToolStripMenuItem, openInNewWindowToolStripMenuItem, toolStripSeparator1, copyToolStripMenuItem, cutToolStripMenuItem, deleteToolStripMenuItem, renameToolStripMenuItem, toolStripSeparator2, createShortcutToolStripMenuItem1, toolStripSeparator3, propertiesToolStripMenuItem });
+      DirectoryContextMenu.Name = "DirectoryContextMenu";
+      DirectoryContextMenu.Size = new Size(189, 198);
       // 
-      // toolStripContainer1.ContentPanel
+      // openFolderToolStripMenuItem
       // 
-      toolStripContainer1.ContentPanel.AutoScroll = true;
-      toolStripContainer1.ContentPanel.Controls.Add(tableLayoutPanel1);
-      toolStripContainer1.ContentPanel.Size = new Size(1156, 697);
-      toolStripContainer1.Dock = DockStyle.Fill;
-      toolStripContainer1.LeftToolStripPanelVisible = false;
-      toolStripContainer1.Location = new Point(0, 0);
-      toolStripContainer1.Name = "toolStripContainer1";
-      toolStripContainer1.RightToolStripPanelVisible = false;
-      toolStripContainer1.Size = new Size(1156, 697);
-      toolStripContainer1.TabIndex = 0;
-      toolStripContainer1.Text = "toolStripContainer1";
-      toolStripContainer1.TopToolStripPanelVisible = false;
+      openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
+      openFolderToolStripMenuItem.Size = new Size(188, 22);
+      openFolderToolStripMenuItem.Text = "Open folder";
+      // 
+      // openInNewWindowToolStripMenuItem
+      // 
+      openInNewWindowToolStripMenuItem.Name = "openInNewWindowToolStripMenuItem";
+      openInNewWindowToolStripMenuItem.Size = new Size(188, 22);
+      openInNewWindowToolStripMenuItem.Text = "Open in new Window";
+      // 
+      // toolStripSeparator1
+      // 
+      toolStripSeparator1.Name = "toolStripSeparator1";
+      toolStripSeparator1.Size = new Size(185, 6);
+      // 
+      // copyToolStripMenuItem
+      // 
+      copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+      copyToolStripMenuItem.Size = new Size(188, 22);
+      copyToolStripMenuItem.Text = "Copy";
+      // 
+      // cutToolStripMenuItem
+      // 
+      cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+      cutToolStripMenuItem.Size = new Size(188, 22);
+      cutToolStripMenuItem.Text = "Cut";
+      // 
+      // deleteToolStripMenuItem
+      // 
+      deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+      deleteToolStripMenuItem.Size = new Size(188, 22);
+      deleteToolStripMenuItem.Text = "Delete";
+      // 
+      // renameToolStripMenuItem
+      // 
+      renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+      renameToolStripMenuItem.Size = new Size(188, 22);
+      renameToolStripMenuItem.Text = "Rename";
+      // 
+      // toolStripSeparator2
+      // 
+      toolStripSeparator2.Name = "toolStripSeparator2";
+      toolStripSeparator2.Size = new Size(185, 6);
+      // 
+      // createShortcutToolStripMenuItem1
+      // 
+      createShortcutToolStripMenuItem1.Name = "createShortcutToolStripMenuItem1";
+      createShortcutToolStripMenuItem1.Size = new Size(188, 22);
+      createShortcutToolStripMenuItem1.Text = "Create Shortcut";
+      // 
+      // toolStripSeparator3
+      // 
+      toolStripSeparator3.Name = "toolStripSeparator3";
+      toolStripSeparator3.Size = new Size(185, 6);
+      // 
+      // propertiesToolStripMenuItem
+      // 
+      propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
+      propertiesToolStripMenuItem.Size = new Size(188, 22);
+      propertiesToolStripMenuItem.Text = "Properties";
+      // 
+      // FileContextMenu
+      // 
+      FileContextMenu.Items.AddRange(new ToolStripItem[] { openToolStripMenuItem, openWithToolStripMenuItem, toolStripSeparator4, copyToolStripMenuItem1, cutToolStripMenuItem1, deleteToolStripMenuItem1, renameToolStripMenuItem1, toolStripSeparator5, createShortcutToolStripMenuItem, toolStripSeparator6, propertiesToolStripMenuItem1 });
+      FileContextMenu.Name = "FileContextMenu";
+      FileContextMenu.Size = new Size(157, 198);
+      // 
+      // openToolStripMenuItem
+      // 
+      openToolStripMenuItem.Name = "openToolStripMenuItem";
+      openToolStripMenuItem.Size = new Size(156, 22);
+      openToolStripMenuItem.Text = "Open";
+      // 
+      // openWithToolStripMenuItem
+      // 
+      openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
+      openWithToolStripMenuItem.Size = new Size(156, 22);
+      openWithToolStripMenuItem.Text = "Open With";
+      // 
+      // toolStripSeparator4
+      // 
+      toolStripSeparator4.Name = "toolStripSeparator4";
+      toolStripSeparator4.Size = new Size(153, 6);
+      // 
+      // copyToolStripMenuItem1
+      // 
+      copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
+      copyToolStripMenuItem1.Size = new Size(156, 22);
+      copyToolStripMenuItem1.Text = "Copy";
+      // 
+      // cutToolStripMenuItem1
+      // 
+      cutToolStripMenuItem1.Name = "cutToolStripMenuItem1";
+      cutToolStripMenuItem1.Size = new Size(156, 22);
+      cutToolStripMenuItem1.Text = "Cut";
+      // 
+      // deleteToolStripMenuItem1
+      // 
+      deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
+      deleteToolStripMenuItem1.Size = new Size(156, 22);
+      deleteToolStripMenuItem1.Text = "Delete";
+      // 
+      // renameToolStripMenuItem1
+      // 
+      renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
+      renameToolStripMenuItem1.Size = new Size(156, 22);
+      renameToolStripMenuItem1.Text = "Rename";
+      // 
+      // toolStripSeparator5
+      // 
+      toolStripSeparator5.Name = "toolStripSeparator5";
+      toolStripSeparator5.Size = new Size(153, 6);
+      // 
+      // createShortcutToolStripMenuItem
+      // 
+      createShortcutToolStripMenuItem.Name = "createShortcutToolStripMenuItem";
+      createShortcutToolStripMenuItem.Size = new Size(156, 22);
+      createShortcutToolStripMenuItem.Text = "Create Shortcut";
+      // 
+      // toolStripSeparator6
+      // 
+      toolStripSeparator6.Name = "toolStripSeparator6";
+      toolStripSeparator6.Size = new Size(153, 6);
+      // 
+      // propertiesToolStripMenuItem1
+      // 
+      propertiesToolStripMenuItem1.Name = "propertiesToolStripMenuItem1";
+      propertiesToolStripMenuItem1.Size = new Size(156, 22);
+      propertiesToolStripMenuItem1.Text = "Properties";
+      // 
+      // MainMenuStrip
+      // 
+      MainMenuStrip.Items.AddRange(new ToolStripItem[] { viewToolStripMenuItem });
+      MainMenuStrip.Location = new Point(0, 0);
+      MainMenuStrip.Name = "MainMenuStrip";
+      MainMenuStrip.Size = new Size(1156, 24);
+      MainMenuStrip.TabIndex = 3;
+      MainMenuStrip.Text = "menuStrip1";
+      // 
+      // viewToolStripMenuItem
+      // 
+      viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ItemDisplayModeSelection });
+      viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+      viewToolStripMenuItem.Size = new Size(44, 20);
+      viewToolStripMenuItem.Text = "View";
+      viewToolStripMenuItem.DropDownOpening += viewToolStripMenuItem_DropDownOpening;
+      // 
+      // ItemDisplayModeSelection
+      // 
+      ItemDisplayModeSelection.DropDownStyle = ComboBoxStyle.DropDownList;
+      ItemDisplayModeSelection.FlatStyle = FlatStyle.System;
+      ItemDisplayModeSelection.Items.AddRange(new object[] { "List", "Hex" });
+      ItemDisplayModeSelection.Name = "ItemDisplayModeSelection";
+      ItemDisplayModeSelection.Size = new Size(121, 23);
+      ItemDisplayModeSelection.SelectedIndexChanged += ItemDisplayModeSelection_SelectedIndexChanged;
       // 
       // HexPlorerWindow
       // 
       AutoScaleDimensions = new SizeF(7F, 15F);
       AutoScaleMode = AutoScaleMode.Font;
       ClientSize = new Size(1156, 697);
-      Controls.Add(toolStripContainer1);
+      Controls.Add(tableLayoutPanel1);
+      Controls.Add(MainMenuStrip);
       Name = "HexPlorerWindow";
       Text = "Hex-Plorer";
       MouseDown += NavigationButton_MouseDown;
+      SearchOptionsStrip.ResumeLayout(false);
       tableLayoutPanel1.ResumeLayout(false);
       splitContainer1.Panel1.ResumeLayout(false);
       splitContainer1.Panel2.ResumeLayout(false);
@@ -297,17 +514,22 @@ partial class HexPlorerWindow
       tableLayoutPanel3.ResumeLayout(false);
       tableLayoutPanel4.ResumeLayout(false);
       tableLayoutPanel4.PerformLayout();
-      toolStripContainer1.ContentPanel.ResumeLayout(false);
-      toolStripContainer1.ResumeLayout(false);
-      toolStripContainer1.PerformLayout();
+      DirectoryContextMenu.ResumeLayout(false);
+      FileContextMenu.ResumeLayout(false);
+      MainMenuStrip.ResumeLayout(false);
+      MainMenuStrip.PerformLayout();
       ResumeLayout(false);
+      PerformLayout();
    }
 
    #endregion
-
+   internal ContextMenuStrip SearchOptionsStrip;
+   internal ToolStripMenuItem UseDeepSearch;
+   internal ToolStripMenuItem MatchCase;
+   internal ToolStripMenuItem UseRegex;
+   internal ToolStripMenuItem MatchFullWord;
    private TableLayoutPanel tableLayoutPanel1;
    private SplitContainer splitContainer1;
-   private ToolStripContainer toolStripContainer1;
    public TreeView FileTreeView;
    public SplitContainer ViewSplitContainer;
    private Panel PreviewPanel;
@@ -321,4 +543,31 @@ partial class HexPlorerWindow
    private TextBox textBox1;
    private Button button5;
    private ComboBox comboBox1;
+   public ContextMenuStrip DirectoryContextMenu;
+   private ToolStripMenuItem openFolderToolStripMenuItem;
+   private ToolStripMenuItem openInNewWindowToolStripMenuItem;
+   private ToolStripSeparator toolStripSeparator1;
+   private ToolStripMenuItem copyToolStripMenuItem;
+   private ToolStripMenuItem cutToolStripMenuItem;
+   private ToolStripMenuItem deleteToolStripMenuItem;
+   private ToolStripMenuItem renameToolStripMenuItem;
+   private ToolStripSeparator toolStripSeparator2;
+   public ContextMenuStrip FileContextMenu;
+   private ToolStripMenuItem propertiesToolStripMenuItem;
+   private ToolStripSeparator toolStripSeparator3;
+   private ToolStripMenuItem createShortcutToolStripMenuItem1;
+   private ToolStripMenuItem openToolStripMenuItem;
+   private ToolStripMenuItem openWithToolStripMenuItem;
+   private ToolStripSeparator toolStripSeparator4;
+   private ToolStripMenuItem copyToolStripMenuItem1;
+   private ToolStripMenuItem cutToolStripMenuItem1;
+   private ToolStripMenuItem deleteToolStripMenuItem1;
+   private ToolStripMenuItem renameToolStripMenuItem1;
+   private ToolStripSeparator toolStripSeparator5;
+   private ToolStripMenuItem createShortcutToolStripMenuItem;
+   private ToolStripSeparator toolStripSeparator6;
+   private ToolStripMenuItem propertiesToolStripMenuItem1;
+   private MenuStrip MainMenuStrip;
+   private ToolStripMenuItem viewToolStripMenuItem;
+   private ToolStripComboBox ItemDisplayModeSelection;
 }
