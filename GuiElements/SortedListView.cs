@@ -34,7 +34,8 @@ public class SortedListView : ListView
       Sort();
    }
 
-   private void OnClick(object? sender, MouseEventArgs e)
+
+   public void OnClick(object? sender, MouseEventArgs e)
    {
       if (e.Button == MouseButtons.Right)
       {
@@ -42,7 +43,7 @@ public class SortedListView : ListView
          return;
       }
       var clientPoint = PointToClient(MousePosition);
-      var item = this.GetItemAt(clientPoint.X, clientPoint.Y);
+      var item = GetItemAt(clientPoint.X, clientPoint.Y);
       if (item == null)
          return;
 
@@ -75,7 +76,7 @@ public class SortedListView : ListView
          }
       }
    }
-   
+
 }
 
 public class ListViewItemComparer : IComparer

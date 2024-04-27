@@ -14,8 +14,8 @@ public class HexLayoutPanel : TableLayoutPanel
    public void SetContent(string path, ItemType type, HexPlorerWindow window)
    {
       
-      Panel = HexViewHelper.GetHexPanel(path, type, window, 100 - Padding.All * 4, 100 - Padding.All * 4);
-      TextBox = HexViewHelper.GetTextBox(path, Panel.EntryName, window, 100 - Padding.All * 4, 40);
+      Panel = HexViewHelper.GetHexPanel(path, type, window, Width - Padding.All * 2, Width - Padding.All * 2);
+      TextBox = HexViewHelper.GetTextBox(path, Panel.EntryName, window, Width - Padding.All * 2, Height - Width);
 
       Controls.Add(Panel, 0, 0);
       Controls.Add(TextBox, 0, 1);

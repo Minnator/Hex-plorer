@@ -7,26 +7,34 @@ public static class DataHelper
    public static List<FileInfo> GetAllFiles(string path)
    {
       var files = new List<FileInfo>();
-      foreach (var item in Directory.EnumerateFileSystemEntries(path))
+      try
       {
-         var info = new FileInfo(item);
-         if (File.Exists(item) && CanReadFileInfo(info)) 
-            files.Add(info);
+         foreach (var item in Directory.EnumerateFileSystemEntries(path))
+         {
+            var info = new FileInfo(item);
+            if (File.Exists(item) && CanReadFileInfo(info))
+               files.Add(info);
 
+         }
       }
+      catch (UnauthorizedAccessException) { }
       return files;
    }
 
    public static List<DirectoryInfo> GetAllDirectories(string path)
    {
       var dirs = new List<DirectoryInfo>();
-      foreach (var item in Directory.EnumerateFileSystemEntries(path))
+      try
       {
-         var info = new DirectoryInfo(item);
-         if (Directory.Exists(item) && CanReadDirectoryInfo(info)) 
-            dirs.Add(info);
+         foreach (var item in Directory.EnumerateFileSystemEntries(path))
+         {
+            var info = new DirectoryInfo(item);
+            if (Directory.Exists(item) && CanReadDirectoryInfo(info))
+               dirs.Add(info);
 
+         }
       }
+      catch (UnauthorizedAccessException) {}
       return dirs;
    }
 

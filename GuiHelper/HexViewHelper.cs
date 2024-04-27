@@ -18,36 +18,38 @@ public static class HexViewHelper
          FlowDirection = FlowDirection.LeftToRight,
          Padding = new Padding(5),
       };
-
-      foreach (var dir in DataHelper.GetAllDirectories(path))
-      {
-         var panel= GetHexLayoutPanel(dir.FullName, ItemType.Directory, window);
-         flowPanel.Controls.Add(panel);
-      }
-
-      foreach (var file in DataHelper.GetAllFiles(path))
-      {
-         var type = File.GetAttributes(file.FullName) == FileAttributes.Directory ? ItemType.Directory : ItemType.File;
-         var panel = GetHexLayoutPanel(file.FullName, type, window);
-         flowPanel.Controls.Add(panel);
-      }
-
       window.HexState.FlowPanelHexView = flowPanel;
+      window.HexState.FlowPanelHexView!.DoubleBuffered(true);
+      window.HexState.FlowPanelHexView!.SuspendLayout();
+
+      foreach (var dir in DataHelper.GetAllDirectories(path)) 
+         flowPanel.Controls.Add(GetHexLayoutPanel(dir.FullName, ItemType.Directory, window));
+
+      foreach (var file in DataHelper.GetAllFiles(path)) 
+         flowPanel.Controls.Add(GetHexLayoutPanel(file.FullName, ItemType.File, window));
+
+      window.SuspendLayout();
       window.ViewSplitContainer.Panel1.Controls.Add(flowPanel);
+      window.HexState.FlowPanelHexView.ResumeLayout(false);
+      window.HexState.FlowPanelHexView.PerformLayout();
+      window.ResumeLayout();
    }
 
    private static HexLayoutPanel GetHexLayoutPanel(string path, ItemType type, HexPlorerWindow window)
    {
-      var panel = new HexLayoutPanel();
-      panel.BackColor = Color.DimGray;
-      panel.Padding = new Padding(1);
-      panel.Margin = new Padding(4);
-      panel.ColumnCount = 1;
-      panel.RowCount = 2;
-      panel.BorderStyle = BorderStyle.FixedSingle;
-      panel.Width = 100;
-      panel.Height = 140;
-      
+      var panel = new HexLayoutPanel
+      {
+         BackColor = Color.DimGray,
+         Padding = new Padding(1),
+         Margin = new Padding(4),
+         ColumnCount = 1,
+         RowCount = 2,
+         BorderStyle = BorderStyle.None,
+         Width = 100,
+         Height = 140,
+         AutoSize = true
+      };
+
       panel.SetContent(path, type, window);
       return panel;
    }
@@ -62,7 +64,7 @@ public static class HexViewHelper
          Margin = new Padding(0),
          Width = width,
          Height = height,
-         BackColor = Color.DimGray
+         BackColor = Color.DimGray,
       };
       return panel;
    }
@@ -76,7 +78,7 @@ public static class HexViewHelper
          Multiline = true,
          ReadOnly = true,
          BackColor = Color.DimGray,
-         ForeColor = Color.CadetBlue,
+         ForeColor = Color.Black,
          Font = new Font("VeraMono", 8),
          BorderStyle = BorderStyle.None,
          ScrollBars = ScrollBars.None,
@@ -88,4 +90,6 @@ public static class HexViewHelper
       };
       return textBox;
    }
+
+
 }

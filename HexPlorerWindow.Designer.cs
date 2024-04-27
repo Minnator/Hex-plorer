@@ -131,11 +131,12 @@ partial class HexPlorerWindow
       // 
       // tableLayoutPanel1
       // 
+      tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+      tableLayoutPanel1.BackColor = SystemColors.ActiveCaptionText;
       tableLayoutPanel1.ColumnCount = 1;
       tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
       tableLayoutPanel1.Controls.Add(splitContainer1, 0, 1);
       tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 0);
-      tableLayoutPanel1.Dock = DockStyle.Fill;
       tableLayoutPanel1.Location = new Point(0, 24);
       tableLayoutPanel1.Name = "tableLayoutPanel1";
       tableLayoutPanel1.RowCount = 2;
@@ -146,6 +147,7 @@ partial class HexPlorerWindow
       // 
       // splitContainer1
       // 
+      splitContainer1.BackColor = SystemColors.ActiveCaptionText;
       splitContainer1.Dock = DockStyle.Fill;
       splitContainer1.FixedPanel = FixedPanel.Panel1;
       splitContainer1.Location = new Point(3, 33);
@@ -158,20 +160,21 @@ partial class HexPlorerWindow
       // splitContainer1.Panel2
       // 
       splitContainer1.Panel2.Controls.Add(ViewSplitContainer);
-      splitContainer1.Size = new Size(1150, 661);
+      splitContainer1.Size = new Size(1150, 637);
       splitContainer1.SplitterDistance = 250;
       splitContainer1.TabIndex = 0;
       splitContainer1.TabStop = false;
       // 
       // FileTreeView
       // 
+      FileTreeView.BackColor = SystemColors.ControlDarkDark;
       FileTreeView.Dock = DockStyle.Fill;
       FileTreeView.FullRowSelect = true;
       FileTreeView.HotTracking = true;
       FileTreeView.Location = new Point(0, 0);
       FileTreeView.Margin = new Padding(0);
       FileTreeView.Name = "FileTreeView";
-      FileTreeView.Size = new Size(250, 661);
+      FileTreeView.Size = new Size(250, 637);
       FileTreeView.TabIndex = 0;
       FileTreeView.AfterCollapse += FileTreeView_AfterCollapse;
       FileTreeView.AfterExpand += FileTreeView_AfterExpand;
@@ -184,20 +187,25 @@ partial class HexPlorerWindow
       ViewSplitContainer.Margin = new Padding(0);
       ViewSplitContainer.Name = "ViewSplitContainer";
       // 
+      // ViewSplitContainer.Panel1
+      // 
+      ViewSplitContainer.Panel1.BackColor = SystemColors.ControlDarkDark;
+      // 
       // ViewSplitContainer.Panel2
       // 
       ViewSplitContainer.Panel2.Controls.Add(PreviewPanel);
-      ViewSplitContainer.Size = new Size(896, 661);
+      ViewSplitContainer.Size = new Size(896, 637);
       ViewSplitContainer.SplitterDistance = 700;
       ViewSplitContainer.TabIndex = 0;
       // 
       // PreviewPanel
       // 
+      PreviewPanel.BackColor = SystemColors.ControlDarkDark;
       PreviewPanel.BorderStyle = BorderStyle.FixedSingle;
       PreviewPanel.Dock = DockStyle.Fill;
       PreviewPanel.Location = new Point(0, 0);
       PreviewPanel.Name = "PreviewPanel";
-      PreviewPanel.Size = new Size(192, 661);
+      PreviewPanel.Size = new Size(192, 637);
       PreviewPanel.TabIndex = 0;
       // 
       // tableLayoutPanel2
@@ -268,6 +276,7 @@ partial class HexPlorerWindow
       // 
       // tableLayoutPanel3
       // 
+      tableLayoutPanel3.BackColor = SystemColors.WindowFrame;
       tableLayoutPanel3.ColumnCount = 2;
       tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
       tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
@@ -300,6 +309,7 @@ partial class HexPlorerWindow
       // 
       // textBox1
       // 
+      textBox1.BackColor = SystemColors.ControlDark;
       textBox1.ContextMenuStrip = SearchOptionsStrip;
       textBox1.Dock = DockStyle.Fill;
       textBox1.Location = new Point(3, 3);
@@ -320,6 +330,7 @@ partial class HexPlorerWindow
       // 
       // comboBox1
       // 
+      comboBox1.BackColor = SystemColors.ControlDark;
       comboBox1.Dock = DockStyle.Fill;
       comboBox1.FormattingEnabled = true;
       comboBox1.Location = new Point(3, 3);
@@ -467,6 +478,7 @@ partial class HexPlorerWindow
       // 
       // MainMenuStrip
       // 
+      MainMenuStrip.BackColor = SystemColors.ControlDarkDark;
       MainMenuStrip.Items.AddRange(new ToolStripItem[] { viewToolStripMenuItem });
       MainMenuStrip.Location = new Point(0, 0);
       MainMenuStrip.Name = "MainMenuStrip";
@@ -476,6 +488,7 @@ partial class HexPlorerWindow
       // 
       // viewToolStripMenuItem
       // 
+      viewToolStripMenuItem.BackColor = SystemColors.ControlDarkDark;
       viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ItemDisplayModeSelection });
       viewToolStripMenuItem.Name = "viewToolStripMenuItem";
       viewToolStripMenuItem.Size = new Size(44, 20);

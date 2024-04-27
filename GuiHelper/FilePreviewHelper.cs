@@ -1,4 +1,7 @@
-﻿using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+﻿using System.Text;
+using System.Windows.Forms;
+using Hex_plorer.GuiElements;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using TextBox = System.Windows.Forms.TextBox;
 
 namespace Hex_plorer.GuiHelper;
@@ -25,30 +28,92 @@ public static class FilePreviewHelper
             break;
          case FileType.NONE:
             return;
+         case FileType.Table:
+            break;
+         default:
+            throw new ArgumentOutOfRangeException();
       }
    }
 
    public static void ShowTextPreview(string fullPath, HexPlorerWindow window)
    {
       window.ViewSplitContainer.Panel2.Controls.Clear();
-      var textBox = new TextBox
+      var textBox = new HexTextBox(window)
       {
          Dock = DockStyle.Fill,
          Multiline = true,
          ScrollBars = ScrollBars.Both,
          ReadOnly = true,
          Font = new Font("Consolas", 10),
-         Text = File.ReadAllText(fullPath),
          HideSelection = false,
       };
       window.ViewSplitContainer.Panel2.Controls.Add(textBox);
 
-      try
+      // I only want to render a small preview of the file.
+      // If the size of the file is small enough the entire content will be shown
+      // For big files only the first 50 lines will be shown and once the preview is clicked 
+      // the entire content will be shown
+      textBox.Text = GetPreviewText(fullPath, window);
+   }
+
+   private static string GetPreviewText(string path, HexPlorerWindow window)
+   {
+      var fileInfo = new FileInfo(path);
+      if (fileInfo.Length < window.HexState.MaxFullPreviewFileSize)
+         return File.ReadAllText(path);
+
+      if (CountLines(path) > window.HexState.MaxLinesPreview)
+         return GetQuickPreviewString(path);
+      return GetQuickPreviewFileStart(path, window);
+   }
+
+   private static string GetQuickPreviewFileStart(string path, HexPlorerWindow window)
+   {
+      var buffer = new char[window.HexState.MaxCharPreview];
+      var result = new StringBuilder();
+
+      using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
       {
-         textBox.Text = File.ReadAllText(fullPath);
+         using (var reader = new StreamReader(fileStream))
+         {
+            // Read characters directly into the buffer
+            var charsRead = reader.ReadBlock(buffer, 0, window.HexState.MaxCharPreview);
+            // Append the read characters to the result
+            result.Append(buffer, 0, charsRead);
+         }
       }
-      catch (UnauthorizedAccessException) { }
-      catch (IOException) { }
+      return result.ToString();
+   }
+
+   private static int CountLines(string path)
+   {
+      var lineCount = 0;
+      using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+      {
+         using (var reader = new StreamReader(fileStream))
+         {
+            while (reader.ReadLine() != null)
+            {
+               lineCount++;
+            }
+         }
+      }
+      return lineCount;
+   }
+
+   private static string GetQuickPreviewString(string fullPath)
+   {
+      var sb = new StringBuilder();
+      using (var reader = new StreamReader(fullPath))
+      {
+         var lineCount = 0;
+         while (reader.ReadLine() is { } line && lineCount < 50 && sb.Length < 2000)
+         {
+            sb.AppendLine(line);
+            lineCount++;
+         }
+      }
+      return sb.ToString();
    }
 
    public static void ShowImagePreview(string fullPath, HexPlorerWindow window)
@@ -72,10 +137,12 @@ public static class FilePreviewHelper
 
    public static void DisposeComponents(HexPlorerWindow window)
    {
-      foreach (Control control in window.ViewSplitContainer.Panel2.Controls) control.Dispose();
+      foreach (Control control in window.ViewSplitContainer.Panel2.Controls) 
+         control.Dispose();
       window.ViewSplitContainer.Panel2.Controls.Clear();
       GC.Collect();
    }
+
 
    public static FileType GetFileType(string fullPath)
    {
@@ -121,4 +188,7 @@ public static class FilePreviewHelper
       }
    }
 
+   
+
 }
+

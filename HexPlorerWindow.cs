@@ -1,12 +1,17 @@
 ﻿using Hex_plorer.GuiHelper;
+using System.Diagnostics;
 
 namespace Hex_plorer;
 public partial class HexPlorerWindow : Form
 {
-   public HexState HexState { get; set; } = new HexState();
+   public HexState HexState { get; set; } = new();
    public HexPlorerWindow()
    {
       InitializeComponent();
+
+      ResizeBegin += WindowBeginResize;
+      ResizeEnd += WindowEndResize;
+      
       // Initialize the tree view
       FileTreeViewHelper.AddDisksToTreeView(this);
    }
@@ -72,6 +77,9 @@ public partial class HexPlorerWindow : Form
       ItemViewHelper.LoadItemView(FileTreeView.SelectedNode, this);
    }
 
+   private void WindowBeginResize(object? sender, EventArgs e) => splitContainer1.SuspendLayout();
+   private void WindowEndResize(object? sender, EventArgs e) => splitContainer1.ResumeLayout();
+
 
 
    // ------------------------ Methods ------------------------ \\
@@ -83,6 +91,14 @@ public partial class HexPlorerWindow : Form
       FilePreviewHelper.DisposeComponents(this);
       if (File.Exists(path))
          FilePreviewHelper.ShowPreview(path, this);
+      else 
+         ShowMessageInPreview("No file to preview");
    }
 
+   private void ShowMessageInPreview(string text)
+   {
+      var g = ViewSplitContainer.Panel2.CreateGraphics();
+      Debug.WriteLine ($"Showing message in Preview: {text}");
+      DrawHelper.DrawStringCenteredInRect(g, text, new Rectangle(0, 0, ViewSplitContainer.Panel2.Width, ViewSplitContainer.Panel2.Height), HexState.DFont, Brushes.White);
+   }
 }
