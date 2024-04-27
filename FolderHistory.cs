@@ -2,6 +2,7 @@
 
 namespace Hex_plorer;
 
+[Obsolete]
 public static class FolderHistory
 {
    private static readonly List<string> History = new();

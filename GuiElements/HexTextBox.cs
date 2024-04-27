@@ -43,7 +43,7 @@ public class HexTextBox : TextBox
          var node = FileTreeViewHelper.NavigateTo(Path, Window);
          if (node != null)
          {
-            ItemViewHelper.LoadItemView(node, Window);
+            ItemViewHelper.LoadItemView(node.FullPath, Window);
             FolderHistory.Add(node.FullPath);
          }
       }

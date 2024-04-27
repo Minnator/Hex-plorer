@@ -5,8 +5,10 @@ namespace Hex_plorer;
 public partial class HexPlorerWindow : Form
 {
    public HexState HexState { get; set; } = new();
+   public Navigation Nav { get; set; }
    public HexPlorerWindow()
    {
+      Nav = new(10, this);
       InitializeComponent();
 
       ResizeBegin += WindowBeginResize;
@@ -22,7 +24,7 @@ public partial class HexPlorerWindow : Form
          return;
       FileTreeViewHelper.OpenFolderFileTreeView(e.Node);
       if (!HexState.IsLoadingPath)
-         FolderHistory.Add(e.Node.FullPath);
+         Nav.AddToHistory(e.Node.FullPath);
    }
 
    private void FileTreeView_AfterCollapse(object sender, TreeViewEventArgs e)
@@ -31,7 +33,7 @@ public partial class HexPlorerWindow : Form
          return;
       e.Node.Nodes.Clear();
       e.Node.Nodes.Add(new TreeNode());
-      FolderHistory.Add(e.Node.FullPath);
+      Nav.AddToHistory(e.Node.FullPath);
    }
 
    public void NavigationButton_MouseDown(object? sender, MouseEventArgs e)
@@ -40,16 +42,16 @@ public partial class HexPlorerWindow : Form
       {
          // Mouse button 4 (back)
          case MouseButtons.XButton1:
-            if (FolderHistory.GetCurrent() == 0)
+            if (Nav.Current == 0)
             {
                FileTreeViewHelper.AddDisksToTreeView(this);
                return;
             }
-            FileTreeViewHelper.NavigateTo(FolderHistory.NavigateBack(), this);
+            FileTreeViewHelper.NavigateTo(Nav.NavigateBack(), this);
             break;
          // Mouse button 5 (forward)
          case MouseButtons.XButton2:
-            FileTreeViewHelper.NavigateTo(FolderHistory.NavigateForward(), this);
+            FileTreeViewHelper.NavigateTo(Nav.NavigateForward(), this);
             break;
       }
    }
@@ -59,7 +61,7 @@ public partial class HexPlorerWindow : Form
       if (FileTreeView.SelectedNode == null)
          return;
       var nodeBelowCursor = FileTreeView.GetNodeAt(FileTreeView.PointToClient(Cursor.Position));
-      ItemViewHelper.LoadItemView(nodeBelowCursor, this);
+      Nav.NavigateTo(nodeBelowCursor.FullPath);
    }
 
    private void MatchCase_Click(object sender, EventArgs e) => MatchCase.Checked = !MatchCase.Checked;
@@ -74,12 +76,22 @@ public partial class HexPlorerWindow : Form
    private void ItemDisplayModeSelection_SelectedIndexChanged(object sender, EventArgs e)
    {
       HexState.ItemDisplayMode = (ItemDisplayMode)Enum.Parse(typeof(ItemDisplayMode), ItemDisplayModeSelection.SelectedItem?.ToString() ?? "List");
-      ItemViewHelper.LoadItemView(FileTreeView.SelectedNode, this);
+      if (FileTreeView.SelectedNode == null)
+         return;
+      ItemViewHelper.LoadItemView(FileTreeView.SelectedNode.FullPath, this);
    }
 
    private void WindowBeginResize(object? sender, EventArgs e) => splitContainer1.SuspendLayout();
    private void WindowEndResize(object? sender, EventArgs e) => splitContainer1.ResumeLayout();
 
+   private void SelectedAddressChange(object? sender, EventArgs e)
+   {
+      AddressBar.Text = AddressBar.Items[AddressBar.SelectedIndex]?.ToString();
+      if (string.IsNullOrEmpty(AddressBar.Text))
+         return;
+      Debug.WriteLine($"Navigating to: {AddressBar.Text}");
+      Nav.NavigateTo(AddressBar.Text);
+   }
 
 
    // ------------------------ Methods ------------------------ \\

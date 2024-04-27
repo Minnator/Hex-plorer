@@ -47,6 +47,7 @@ public class SortedListView : ListView
       if (item == null)
          return;
 
+      // TODO solve with new ListViewItems
       var current = FolderHistory.GetCurrentPath();
       if (current == null)
          return;
@@ -64,17 +65,7 @@ public class SortedListView : ListView
       if (current == null)
          return;
       var itemPath = Path.Combine(current, item.SubItems[0].Text);
-      if (File.Exists(itemPath))
-         OpenFileHelper.OpenFileWithDefault(itemPath);
-      else
-      {
-         var node = FileTreeViewHelper.NavigateTo(itemPath, _window);
-         if (node != null)
-         {
-            ItemViewHelper.LoadItemView(node, _window);
-            FolderHistory.Add(node.FullPath);
-         }
-      }
+      _window.Nav.NavigateTo(itemPath);
    }
 
 }

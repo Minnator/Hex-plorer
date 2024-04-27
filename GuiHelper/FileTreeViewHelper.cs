@@ -59,6 +59,7 @@ public static class FileTreeViewHelper
       node.TreeView.SuspendLayout();
       node.Nodes.Clear();
       node.TreeView.BeginUpdate();
+
       foreach (var item in Directory.EnumerateDirectories(node.FullPath + Path.DirectorySeparatorChar))
       {
          try

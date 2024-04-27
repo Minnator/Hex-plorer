@@ -48,7 +48,7 @@ partial class HexPlorerWindow
       tableLayoutPanel4 = new TableLayoutPanel();
       textBox1 = new TextBox();
       button5 = new Button();
-      comboBox1 = new ComboBox();
+      AddressBar = new ComboBox();
       DirectoryContextMenu = new ContextMenuStrip(components);
       openFolderToolStripMenuItem = new ToolStripMenuItem();
       openInNewWindowToolStripMenuItem = new ToolStripMenuItem();
@@ -179,6 +179,7 @@ partial class HexPlorerWindow
       FileTreeView.AfterCollapse += FileTreeView_AfterCollapse;
       FileTreeView.AfterExpand += FileTreeView_AfterExpand;
       FileTreeView.Click += FileTreeView_Click;
+      FileTreeView.MouseDown += NavigationButton_MouseDown;
       // 
       // ViewSplitContainer
       // 
@@ -281,7 +282,7 @@ partial class HexPlorerWindow
       tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
       tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
       tableLayoutPanel3.Controls.Add(tableLayoutPanel4, 1, 0);
-      tableLayoutPanel3.Controls.Add(comboBox1, 0, 0);
+      tableLayoutPanel3.Controls.Add(AddressBar, 0, 0);
       tableLayoutPanel3.Dock = DockStyle.Fill;
       tableLayoutPanel3.Location = new Point(120, 0);
       tableLayoutPanel3.Margin = new Padding(0);
@@ -328,15 +329,17 @@ partial class HexPlorerWindow
       button5.Text = "X";
       button5.UseVisualStyleBackColor = true;
       // 
-      // comboBox1
+      // AddressBar
       // 
-      comboBox1.BackColor = SystemColors.ControlDark;
-      comboBox1.Dock = DockStyle.Fill;
-      comboBox1.FormattingEnabled = true;
-      comboBox1.Location = new Point(3, 3);
-      comboBox1.Name = "comboBox1";
-      comboBox1.Size = new Size(719, 23);
-      comboBox1.TabIndex = 1;
+      AddressBar.BackColor = SystemColors.ControlDark;
+      AddressBar.Dock = DockStyle.Fill;
+      AddressBar.FlatStyle = FlatStyle.Popup;
+      AddressBar.FormattingEnabled = true;
+      AddressBar.Location = new Point(3, 3);
+      AddressBar.Name = "AddressBar";
+      AddressBar.Size = new Size(719, 23);
+      AddressBar.TabIndex = 1;
+      AddressBar.SelectionChangeCommitted += SelectedAddressChange;
       // 
       // DirectoryContextMenu
       // 
@@ -555,7 +558,7 @@ partial class HexPlorerWindow
    private TableLayoutPanel tableLayoutPanel4;
    private TextBox textBox1;
    private Button button5;
-   private ComboBox comboBox1;
+   public ComboBox AddressBar;
    public ContextMenuStrip DirectoryContextMenu;
    private ToolStripMenuItem openFolderToolStripMenuItem;
    private ToolStripMenuItem openInNewWindowToolStripMenuItem;

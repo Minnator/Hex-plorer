@@ -59,13 +59,6 @@ public sealed class HexPanel : Panel
         if (File.Exists(Path))
             OpenFileHelper.OpenFileWithDefault(Path);
         else
-        {
-            var node = FileTreeViewHelper.NavigateTo(Path, Window);
-            if (node != null)
-            {
-                ItemViewHelper.LoadItemView(node, Window);
-                FolderHistory.Add(node.FullPath);
-            }
-        }
+            Window.Nav.NavigateTo(Path);
     }
 }

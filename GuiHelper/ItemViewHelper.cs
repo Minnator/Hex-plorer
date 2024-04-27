@@ -6,23 +6,23 @@ namespace Hex_plorer;
 
 public static class ItemViewHelper
 {
-    public static void LoadItemView(TreeNode node, HexPlorerWindow window)
+    public static void LoadItemView(string fullPath, HexPlorerWindow window)
     {
         ClearItemView(window);
 
         switch (window.HexState.ItemDisplayMode)
         {
             case ItemDisplayMode.Hex:
-                HexViewHelper.DisplayHex(node.FullPath, window);
+                HexViewHelper.DisplayHex(fullPath, window);
             return;
                 break;
             case ItemDisplayMode.List:
-                DisplayList(node, window);
+                DisplayList(fullPath, window);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        FolderHistory.Add(node.FullPath);
+        FolderHistory.Add(fullPath);
     }
 
     private static void ClearItemView(HexPlorerWindow window)
@@ -31,7 +31,7 @@ public static class ItemViewHelper
         window.HexState.FlowPanelHexView?.Dispose();
     }
 
-    public static void DisplayList(TreeNode node, HexPlorerWindow window)
+    public static void DisplayList(string fullPath, HexPlorerWindow window)
     {
         window.HexState.ItemListView = new SortedListView(window)
         {
@@ -60,7 +60,7 @@ public static class ItemViewHelper
         window.ViewSplitContainer.Panel1.Controls.Clear();
         window.ViewSplitContainer.Panel1.Controls.Add(window.HexState.ItemListView);
 
-        var path = node.FullPath + Path.DirectorySeparatorChar;
+        var path = fullPath + Path.DirectorySeparatorChar;
         var items = new List<ListViewItem>();
 
         foreach (var file in DataHelper.GetAllFiles(path))
