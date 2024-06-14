@@ -46,7 +46,7 @@ partial class HexPlorerWindow
       button4 = new Button();
       tableLayoutPanel3 = new TableLayoutPanel();
       tableLayoutPanel4 = new TableLayoutPanel();
-      textBox1 = new TextBox();
+      SearchBox = new TextBox();
       button5 = new Button();
       AddressBar = new ComboBox();
       DirectoryContextMenu = new ContextMenuStrip(components);
@@ -297,7 +297,7 @@ partial class HexPlorerWindow
       tableLayoutPanel4.ColumnCount = 2;
       tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
       tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
-      tableLayoutPanel4.Controls.Add(textBox1, 0, 0);
+      tableLayoutPanel4.Controls.Add(SearchBox, 0, 0);
       tableLayoutPanel4.Controls.Add(button5, 1, 0);
       tableLayoutPanel4.Dock = DockStyle.Fill;
       tableLayoutPanel4.Location = new Point(725, 0);
@@ -308,16 +308,18 @@ partial class HexPlorerWindow
       tableLayoutPanel4.Size = new Size(311, 30);
       tableLayoutPanel4.TabIndex = 0;
       // 
-      // textBox1
+      // SearchBox
       // 
-      textBox1.BackColor = SystemColors.ControlDark;
-      textBox1.ContextMenuStrip = SearchOptionsStrip;
-      textBox1.Dock = DockStyle.Fill;
-      textBox1.Location = new Point(3, 3);
-      textBox1.Name = "textBox1";
-      textBox1.PlaceholderText = "Search x";
-      textBox1.Size = new Size(275, 23);
-      textBox1.TabIndex = 0;
+      SearchBox.BackColor = SystemColors.ControlDark;
+      SearchBox.ContextMenuStrip = SearchOptionsStrip;
+      SearchBox.Dock = DockStyle.Fill;
+      SearchBox.Location = new Point(3, 3);
+      SearchBox.Name = "SearchBox";
+      SearchBox.PlaceholderText = "Search x";
+      SearchBox.Size = new Size(275, 23);
+      SearchBox.TabIndex = 0;
+      SearchBox.TextChanged += SearchBox_TextChanged;
+      SearchBox.KeyDown += SearchBox_KeyDown;
       // 
       // button5
       // 
@@ -500,8 +502,8 @@ partial class HexPlorerWindow
       // 
       // ItemDisplayModeSelection
       // 
+      ItemDisplayModeSelection.BackColor = SystemColors.ControlDark;
       ItemDisplayModeSelection.DropDownStyle = ComboBoxStyle.DropDownList;
-      ItemDisplayModeSelection.FlatStyle = FlatStyle.System;
       ItemDisplayModeSelection.Items.AddRange(new object[] { "List", "Hex" });
       ItemDisplayModeSelection.Name = "ItemDisplayModeSelection";
       ItemDisplayModeSelection.Size = new Size(121, 23);
@@ -516,6 +518,7 @@ partial class HexPlorerWindow
       Controls.Add(MainMenuStrip);
       Name = "HexPlorerWindow";
       Text = "Hex-Plorer";
+      KeyDown += KeyLogic;
       MouseDown += NavigationButton_MouseDown;
       SearchOptionsStrip.ResumeLayout(false);
       tableLayoutPanel1.ResumeLayout(false);
@@ -556,7 +559,7 @@ partial class HexPlorerWindow
    private Button button4;
    private TableLayoutPanel tableLayoutPanel3;
    private TableLayoutPanel tableLayoutPanel4;
-   private TextBox textBox1;
+   private TextBox SearchBox;
    private Button button5;
    public ComboBox AddressBar;
    public ContextMenuStrip DirectoryContextMenu;

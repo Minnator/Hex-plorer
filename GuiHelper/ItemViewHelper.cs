@@ -52,6 +52,7 @@ public static class ItemViewHelper
 
         };
 
+        // image$i,4$bla.png
         //ImageListHelper.SetImageList();
         //State.ItemListView.LargeImageList = State.ItemImageList; // Assign ImageList to ListView
 

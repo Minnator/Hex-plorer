@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Folder Include="GuiHelper\GuiHelper\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
 </Project>

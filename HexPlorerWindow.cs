@@ -13,7 +13,7 @@ public partial class HexPlorerWindow : Form
 
       ResizeBegin += WindowBeginResize;
       ResizeEnd += WindowEndResize;
-      
+
       // Initialize the tree view
       FileTreeViewHelper.AddDisksToTreeView(this);
    }
@@ -93,6 +93,28 @@ public partial class HexPlorerWindow : Form
       Nav.NavigateTo(AddressBar.Text);
    }
 
+   // ------------------------ Key Logic ------------------------ \\
+
+   private void KeyLogic(object sender, KeyEventArgs e)
+   {
+      //TODO fix this
+      if (e.Control && e.KeyCode == Keys.F)
+         Debug.WriteLine("Ctrl + F pressed");
+      switch (e.Modifiers)
+      {
+         case Keys.Control:
+            switch (e.KeyCode)
+            {
+               case Keys.F:
+                  SearchBox.Focus();
+                  SearchBox.SelectionStart = 0;
+                  SearchBox.SelectionLength = SearchBox.Text.Length;
+                  break;
+            }
+            break;
+      }
+   }
+
 
    // ------------------------ Methods ------------------------ \\
 
@@ -103,14 +125,30 @@ public partial class HexPlorerWindow : Form
       FilePreviewHelper.DisposeComponents(this);
       if (File.Exists(path))
          FilePreviewHelper.ShowPreview(path, this);
-      else 
+      else
          ShowMessageInPreview("No file to preview");
    }
 
    private void ShowMessageInPreview(string text)
    {
       var g = ViewSplitContainer.Panel2.CreateGraphics();
-      Debug.WriteLine ($"Showing message in Preview: {text}");
+      Debug.WriteLine($"Showing message in Preview: {text}");
       DrawHelper.DrawStringCenteredInRect(g, text, new Rectangle(0, 0, ViewSplitContainer.Panel2.Width, ViewSplitContainer.Panel2.Height), HexState.DFont, Brushes.White);
+   }
+
+   private void SearchBox_KeyDown(object sender, KeyEventArgs e)
+   {
+      return;
+      if (e.KeyCode == Keys.Enter)
+      {
+         e.Handled = true;
+         e.SuppressKeyPress = true;
+         Debug.WriteLine("Searching for: " + SearchBox.Text);
+      }
+   }
+
+   private void SearchBox_TextChanged(object sender, EventArgs e)
+   {
+
    }
 }
